@@ -4,8 +4,8 @@
   "description": "App Chat ver 1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \\\"Error: Have error\\\" && exit 1"
+    "start": "node index.js",
+    "start:dev": "nodemon index.js"
   },
   "engines": {
     "node": "16.14.0"
