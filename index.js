@@ -53,13 +53,14 @@ socketIo.on("connection", (socket) => {
   console.log("New client connected: " + socket.id);
 
   socket.on("upOffer", function ({ roomKey, offer }) {
-    console.log("upOffer ", { userID: socket.id, offer });
+    console.log("upOffer ", { userID: socket.id });
     socket.join(roomKey);
     // only send to OTHER people in room
     socket.to(roomKey).emit("downOffer", offer);
   });
 
   socket.on("updateCandidate", function ({ roomKey, candidate }) {
+    console.log("updateCandidate", socket.id);
     socket.join(roomKey);
     //save to user info in case: send to user when remoteDescription is unset
     addUserCandidate(socket.id, candidate);
@@ -83,7 +84,10 @@ socketIo.on("connection", (socket) => {
     const ownerId = getOwnerId(roomKey);
     const ownercandidates = getUserCandidates(ownerId);
 
-    console.log("getRoomCandidates", { guestcandidates, ownercandidates });
+    console.log("getRoomCandidates", {
+      guestcandidates: guestcandidates.length,
+      ownercandidates: ownercandidates.length,
+    });
   });
 
   socket.on("disconnect", () => {
