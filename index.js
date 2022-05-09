@@ -27,6 +27,9 @@ const socketIo = require("socket.io")(server, {
 });
 
 socketIo.on("connection", (socket) => {
+  console.log("New client connected: " + socket.id);
+
+  // VIDEO STREAM
   socket.on("joinRoom", ({ roomKey, isOwner }) => {
     userJoin(socket.id);
     console.log("user join room", socket.id + " " + isOwner);
@@ -49,8 +52,6 @@ socketIo.on("connection", (socket) => {
       socket.to(roomKey).emit("message", "Two user joined in the room");
     }
   });
-
-  console.log("New client connected: " + socket.id);
 
   socket.on("upOffer", function ({ roomKey, offer }) {
     console.log("upOffer ", { userID: socket.id });
@@ -97,6 +98,13 @@ socketIo.on("connection", (socket) => {
       userLeaveRoom(socket.id);
       userLeave(socket.id);
     }
+  });
+
+  // MESSAGES
+  socket.on("sendOtherMessage", function ({ roomKey, message }) {
+    console.log("sendOtherMessage", { roomKey, message });
+    socket.join(roomKey);
+    socket.to(roomKey).emit("getOtherMessage", { message });
   });
 });
 const port = process.env.PORT || 3000;
